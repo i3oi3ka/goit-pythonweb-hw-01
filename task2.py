@@ -44,27 +44,55 @@ class Library(LibraryInterface):
             print(book)
 
 
+class LibraryManager:
+
+    def __init__(self, library: LibraryInterface):
+        self.library = library
+
+    def add_book(self, title, author, year):
+        book = Book(title, author, year)
+        self.library.add_book(book)
+        logging.info("Book added: %s", book)
+
+    def remove_book(self, title):
+        if title == "" or title not in [book.title for book in self.library.books]:
+            logging.info(f"Book not found: {title}")
+            return
+        self.library.remove_book(title)
+        logging.info(f"Book removed: {title}")
+
+    def show_books(self):
+        if len(self.library.books) == 0:
+            logging.info("No books in the library.")
+            return
+        logging.info("Current books in library:")
+        self.library.show_books()
+
+
 def main():
     library = Library()
+    manager = LibraryManager(library)
 
     while True:
         command = input("Enter command (add, remove, show, exit): ").strip().lower()
 
-        if command == "add":
-            title = input("Enter book title: ").strip()
-            author = input("Enter book author: ").strip()
-            year = input("Enter book year: ").strip()
-            library.add_book(Book(title, author, year))
-        elif command == "remove":
-            title = input("Enter book title to remove: ").strip()
-            library.remove_book(title)
-        elif command == "show":
-            library.show_books()
-        elif command == "exit":
-            break
-        else:
-            logging.info("Invalid command. Please try again.")
+        match command:
+            case "add":
+                title = input("Enter book title: ").strip()
+                author = input("Enter book author: ").strip()
+                year = input("Enter book year: ").strip()
+                manager.add_book(title, author, year)
+            case "remove":
+                title = input("Enter book title to remove: ").strip()
+                manager.remove_book(title)
+            case "show":
+                manager.show_books()
+            case "exit":
+                break
+            case _:
+                logging.info("Invalid command. Please try again.")
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main()
