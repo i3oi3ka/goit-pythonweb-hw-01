@@ -10,6 +10,24 @@ class Vehicle(ABC):
         pass
 
 
+class Car(Vehicle):
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
+
+    def start_engine(self):
+        logging.info(f"{self.make} {self.model}: Двигун запущено")
+
+
+class Motorcycle(Vehicle):
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
+
+    def start_engine(self):
+        logging.info(f"{self.make} {self.model}: Мотор заведено")
+
+
 class VehicleFactory(ABC):
     @abstractmethod
     def create_car(self, make, model):
@@ -38,30 +56,12 @@ class EUVehicleFactory(VehicleFactory):
         return Motorcycle(make, f"{model} (EU Spec)")
 
 
-class Car(Vehicle):
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
-
-    def start_engine(self):
-        logging.info(f"{self.make} {self.model}: Двигун запущено")
-
-
-class Motorcycle(Vehicle):
-    def __init__(self, make, model):
-        self.make = make
-        self.model = model
-
-    def start_engine(self):
-        logging.info(f"{self.make} {self.model}: Мотор заведено")
-
-
-USVehicleFactory = USVehicleFactory()
-EUVehicleFactory = EUVehicleFactory()
+us_factory = USVehicleFactory()
+eu_factory = EUVehicleFactory()
 
 # Використання
-vehicle1 = USVehicleFactory.create_car("Toyota", "Corolla")
+vehicle1 = us_factory.create_car("Toyota", "Corolla")
 vehicle1.start_engine()
 
-vehicle2 = EUVehicleFactory.create_motorcycle("Harley-Davidson", "Sportster")
+vehicle2 = eu_factory.create_motorcycle("Harley-Davidson", "Sportster")
 vehicle2.start_engine()
